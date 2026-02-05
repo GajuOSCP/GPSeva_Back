@@ -22,7 +22,7 @@ public class PaymentController {
    @PostMapping("/create-order")
    public Map<String, Object> createOrder(@RequestBody Map<String, Object> data) throws RazorpayException {
 
-       int amount = (int) data.get("amount") * 100; // paisa
+       int amount = (int) data.get("amount"); // paisa
 
        RazorpayClient client = new RazorpayClient(keyId, keySecret);
 
