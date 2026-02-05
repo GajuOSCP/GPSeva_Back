@@ -2,6 +2,7 @@ package com.example.Gpseva.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,16 +23,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+            // 🔴 Disable CSRF for APIs
             .csrf(csrf -> csrf.disable())
 
+            // 🔴 Stateless REST API
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-            // ✅ THIS IS THE REAL FIX
+            // 🔴 Enable CORS with your config
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
 
+            // 🔴 AUTH RULES
             .authorizeHttpRequests(auth -> auth
+
+                // ✅ AUTH APIs
                 .requestMatchers(
                     "/api/register",
                     "/api/register/**",
@@ -39,9 +45,17 @@ public class SecurityConfig {
                     "/api/login/**"
                 ).permitAll()
 
-                // Allow preflight requests
-                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                // ✅ PAYMENT APIs (THIS WAS MISSING)
+                .requestMatchers(
+                    "/api/payment/create-order",
+                    "/api/payment/verify",
+                    "/api/payment/**"
+                ).permitAll()
 
+                // ✅ Allow preflight
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // 🔐 Everything else secured
                 .anyRequest().authenticated()
             );
 
