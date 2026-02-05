@@ -5,33 +5,46 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    private final CorsConfigurationSource corsConfigurationSource;
 
-		http
-				// 🔥 REQUIRED FOR POST APIs
-				.csrf(csrf -> csrf.disable())
+    public SecurityConfig(CorsConfigurationSource corsConfigurationSource) {
+        this.corsConfigurationSource = corsConfigurationSource;
+    }
 
-				// 🔥 REQUIRED FOR REST APIs
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-				// 🔥 CORS ENABLE
-				.cors(cors -> {
-				})
+        http
+            .csrf(csrf -> csrf.disable())
 
-				// 🔥 AUTH RULES
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/register", "/api/register/**").permitAll()
-						.requestMatchers("/api/documents/download/**").permitAll()
-						.requestMatchers("/api/documents/upload").permitAll()
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
 
-						.anyRequest().authenticated());
+            // ✅ THIS IS THE REAL FIX
+            .cors(cors -> cors.configurationSource(corsConfigurationSource))
 
-		return http.build();
-	}
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/api/register",
+                    "/api/register/**",
+                    "/api/login",
+                    "/api/login/**"
+                ).permitAll()
+
+                // Allow preflight requests
+                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+
+                .anyRequest().authenticated()
+            );
+
+        return http.build();
+    }
 }
