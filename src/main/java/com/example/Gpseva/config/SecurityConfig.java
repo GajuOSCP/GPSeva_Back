@@ -23,18 +23,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // 🔴 Disable CSRF for APIs
+            // 🔴 Disable CSRF for REST APIs
             .csrf(csrf -> csrf.disable())
 
-            // 🔴 Stateless REST API
+            // 🔴 Stateless API (JWT / REST friendly)
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-            // 🔴 Enable CORS with your config
+            // 🔴 Enable CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
 
-            // 🔴 AUTH RULES
+            // 🔴 Authorization rules
             .authorizeHttpRequests(auth -> auth
 
                 // ✅ AUTH APIs
@@ -45,17 +45,24 @@ public class SecurityConfig {
                     "/api/login/**"
                 ).permitAll()
 
-                // ✅ PAYMENT APIs (THIS WAS MISSING)
+                // ✅ PAYMENT APIs
                 .requestMatchers(
                     "/api/payment/create-order",
                     "/api/payment/verify",
                     "/api/payment/**"
                 ).permitAll()
 
-                // ✅ Allow preflight
+                // ✅ DOCUMENT UPLOAD & DOWNLOAD APIs (FIX)
+                .requestMatchers(
+                    "/api/documents/upload",
+                    "/api/documents/upload/**",
+                    "/api/documents/download/**"
+                ).permitAll()
+
+                // ✅ Allow preflight requests (VERY IMPORTANT)
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // 🔐 Everything else secured
+                // 🔐 Everything else requires authentication
                 .anyRequest().authenticated()
             );
 
