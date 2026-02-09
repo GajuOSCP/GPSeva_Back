@@ -18,23 +18,28 @@ public class PaymentController {
    private String keySecret;
 
    @PostMapping("/create-order")
-   public Map<String, Object> createOrder(@RequestBody Map<String, Object> data) throws RazorpayException {
+public Map<String, Object> createOrder(@RequestBody Map<String, Object> data)
+        throws RazorpayException {
 
-       int amount = Integer.parseInt(data.get("amount").toString());
+    int amountInRupees = Integer.parseInt(data.get("amount").toString());
 
-       RazorpayClient client = new RazorpayClient(keyId, keySecret);
+    // 🔥 Convert to paise
+    int amountInPaise = amountInRupees * 100;
 
-       JSONObject options = new JSONObject();
-       options.put("amount", amount);
-       options.put("currency", "INR");
-       options.put("receipt", "gpseva_rcpt_01");
+    RazorpayClient client = new RazorpayClient(keyId, keySecret);
 
-       Order order = client.orders.create(options);
+    JSONObject options = new JSONObject();
+    options.put("amount", amountInPaise); // must be >= 100
+    options.put("currency", "INR");
+    options.put("receipt", "gpseva_rcpt_" + System.currentTimeMillis());
 
-       return Map.of(
-           "orderId", order.get("id"),
-           "amount", order.get("amount")
-       );
-   }
+    Order order = client.orders.create(options);
+
+    return Map.of(
+        "orderId", order.get("id"),
+        "amount", order.get("amount")
+    );
+}
+
 }
 
