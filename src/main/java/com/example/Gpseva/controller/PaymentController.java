@@ -9,7 +9,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payment")
-@CrossOrigin(origins = "http://localhost:3000")
 public class PaymentController {
 
    @Value("${razorpay.key.id}")
@@ -18,11 +17,10 @@ public class PaymentController {
    @Value("${razorpay.key.secret}")
    private String keySecret;
 
-   // 1️⃣ Create Order
    @PostMapping("/create-order")
    public Map<String, Object> createOrder(@RequestBody Map<String, Object> data) throws RazorpayException {
 
-       int amount = (int) data.get("amount"); // paisa
+       int amount = Integer.parseInt(data.get("amount").toString());
 
        RazorpayClient client = new RazorpayClient(keyId, keySecret);
 
@@ -34,19 +32,9 @@ public class PaymentController {
        Order order = client.orders.create(options);
 
        return Map.of(
-               "orderId", order.get("id"),
-               "amount", order.get("amount")
+           "orderId", order.get("id"),
+           "amount", order.get("amount")
        );
-   }
-
-   // 2️⃣ Save Payment
-   @PostMapping("/save")
-   public String savePayment(@RequestBody Map<String, String> paymentData) {
-
-       // 👉 Here save to DB (entity below)
-       System.out.println("Payment Saved: " + paymentData);
-
-       return "Payment Saved Successfully";
    }
 }
 
