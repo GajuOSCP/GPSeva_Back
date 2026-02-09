@@ -57,13 +57,13 @@ public class DocumentController {
 
 		switch (code) {
 		case "GP_FORM":
-			filePath = "documents/certificate (1).pdf";
+			filePath = "documents/registration-process.pdf";
 			break;
 		case "AUTH_CERT":
-			filePath = "documents/certificate (2).pdf";
+			filePath = "documents/faq.pdf";
 			break;
 		case "BANK_FORM":
-			filePath = "documents/MAH-B.Ed (General & Special) & B.Ed ELCT-CET-2026.pdf";
+			filePath = "documents/letter-format.pdf";
 			break;
 		default:
 			return ResponseEntity.notFound().build();
