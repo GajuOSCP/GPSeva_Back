@@ -49,6 +49,8 @@ public class CorsConfig {
             "http://localhost:5173",     // Vite dev server
             "http://localhost:3000",     // React dev server (alternative)
             "http://localhost:8080"      // Backend (for testing)
+            "https://gpseva.agsmsgclub.com",
+            "https://www.gpseva.agsmsgclub.com"
         ));
         
         // Allow specific HTTP methods
