@@ -42,36 +42,43 @@ public class CorsConfig {
     
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration config = new CorsConfiguration();
-        
-        // Allow specific origins (add your frontend URLs)
+
         config.setAllowedOriginPatterns(List.of(
-            "http://localhost:5173",     // Vite dev server
-            "http://localhost:3000",     // React dev server (alternative)
-            "http://localhost:8080"      // Backend (for testing)
-            "https://gpseva.agsmsgclub.com",
-            "https://www.gpseva.agsmsgclub.com"
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "http://localhost:8080",
+                "https://gpseva.agsmsgclub.com",
+                "https://www.gpseva.agsmsgclub.com"
         ));
-        
-        // Allow specific HTTP methods
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        
-        // Allow all headers
+
+        config.setAllowedMethods(List.of(
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS",
+                "PATCH"
+        ));
+
         config.setAllowedHeaders(List.of("*"));
-        
-        // Expose headers to frontend
-        config.setExposedHeaders(List.of("Authorization", "Content-Type"));
-        
-        // Allow credentials (cookies, authorization headers)
+
+        config.setExposedHeaders(List.of(
+                "Authorization",
+                "Content-Type"
+        ));
+
         config.setAllowCredentials(true);
-        
-        // Cache preflight requests for 1 hour
+
         config.setMaxAge(3600L);
-        
-        // Register CORS configuration for all endpoints
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
-        
+
         return source;
     }
 }
+
