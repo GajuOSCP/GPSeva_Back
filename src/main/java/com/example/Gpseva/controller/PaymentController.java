@@ -12,6 +12,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payment")
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://gpseva.agsmsgclub.com",
+    "https://www.gpseva.agsmsgclub.com"
+})
 public class PaymentController {
 
     @Value("${razorpay.key.id}")
