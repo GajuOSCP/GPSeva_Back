@@ -13,6 +13,8 @@ public class Payment {
 
 	private String userId; // submissionId / user identifier
 
+	private Long registrationId;
+
 	private String razorpayOrderId;
 	private String razorpayPaymentId;
 	private String razorpaySignature;
@@ -116,17 +118,33 @@ public class Payment {
 
 	@Override
 	public String toString() {
-		return "Payment [id=" + id + ", userId=" + userId + ", razorpayOrderId=" + razorpayOrderId
-				+ ", razorpayPaymentId=" + razorpayPaymentId + ", razorpaySignature=" + razorpaySignature + ", amount="
-				+ amount + ", currency=" + currency + ", status=" + status + ", receipt=" + receipt + ", createdAt="
-				+ createdAt + ", paidAt=" + paidAt + "]";
+		return "Payment [id=" + id + ", userId=" + userId + ", registrationId=" + registrationId + ", razorpayOrderId="
+				+ razorpayOrderId + ", razorpayPaymentId=" + razorpayPaymentId + ", razorpaySignature="
+				+ razorpaySignature + ", amount=" + amount + ", currency=" + currency + ", status=" + status
+				+ ", receipt=" + receipt + ", createdAt=" + createdAt + ", paidAt=" + paidAt + "]";
 	}
 
-	public Payment(Long id, String userId, String razorpayOrderId, String razorpayPaymentId, String razorpaySignature,
-			int amount, String currency, String status, String receipt, LocalDateTime createdAt, LocalDateTime paidAt) {
+	public Payment() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Long getRegistrationId() {
+		return registrationId;
+	}
+
+	public void setRegistrationId(Long registrationId) {
+		this.registrationId = registrationId;
+	}
+	
+
+	public Payment(Long id, String userId, Long registrationId, String razorpayOrderId, String razorpayPaymentId,
+			String razorpaySignature, int amount, String currency, String status, String receipt,
+			LocalDateTime createdAt, LocalDateTime paidAt) {
 		super();
 		this.id = id;
 		this.userId = userId;
+		this.registrationId = registrationId;
 		this.razorpayOrderId = razorpayOrderId;
 		this.razorpayPaymentId = razorpayPaymentId;
 		this.razorpaySignature = razorpaySignature;
@@ -136,11 +154,6 @@ public class Payment {
 		this.receipt = receipt;
 		this.createdAt = createdAt;
 		this.paidAt = paidAt;
-	}
-
-	public Payment() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

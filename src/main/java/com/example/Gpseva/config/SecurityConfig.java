@@ -34,7 +34,7 @@ public class SecurityConfig {
             // 🔴 Enable CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
 
-            // 🔴 Authorization rules
+         // 🔴 Authorization rules
             .authorizeHttpRequests(auth -> auth
 
                 // ✅ AUTH APIs
@@ -52,19 +52,26 @@ public class SecurityConfig {
                     "/api/payment/**"
                 ).permitAll()
 
-                // ✅ DOCUMENT UPLOAD & DOWNLOAD APIs (FIX)
+                // ✅ DOCUMENT APIs
                 .requestMatchers(
                     "/api/documents/upload",
                     "/api/documents/upload/**",
                     "/api/documents/download/**"
                 ).permitAll()
 
-                // ✅ Allow preflight requests (VERY IMPORTANT)
+                // ✅ 🔥 ADMIN DASHBOARD APIs (THIS WAS MISSING)
+                .requestMatchers(
+                    "/api/admin/**",
+                    "/api/admin/dashboard/**"
+                ).permitAll()
+
+                // ✅ Allow preflight
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // 🔐 Everything else requires authentication
+                // 🔐 Everything else
                 .anyRequest().authenticated()
-            );
+            )
+;
 
         return http.build();
     }

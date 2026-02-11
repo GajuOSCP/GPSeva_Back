@@ -49,6 +49,22 @@ public class DocumentController {
 			return ResponseEntity.internalServerError().body("Upload failed");
 		}
 	}
+	
+	
+	@GetMapping("/download/file/{id}")
+	public ResponseEntity<byte[]> downloadUploadedDocument(@PathVariable Long id) {
+
+	    UploadedDocument doc = repository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Document not found"));
+
+	    return ResponseEntity.ok()
+	            .contentType(MediaType.parseMediaType(doc.getContentType()))
+	            .header(HttpHeaders.CONTENT_DISPOSITION,
+	                    "attachment; filename=\"" + doc.getFileName() + "\"")
+	            .body(doc.getFileData());
+	}
+
+	
 
 	@GetMapping("/download/{code}")
 	public ResponseEntity<Resource> downloadDocument(@PathVariable String code) throws IOException {
