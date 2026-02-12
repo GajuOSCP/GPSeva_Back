@@ -36,10 +36,10 @@ public class PaymentController {
     public Map<String, Object> createOrder(@RequestBody Map<String, Object> data)
             throws RazorpayException {
 
-        int amountInRupees = Integer.parseInt(data.get("amount").toString());
+    	double amount = Double.parseDouble(data.get("amount").toString());
         String userId = data.getOrDefault("userId", "UNKNOWN").toString();
 
-        int amountInPaise = amountInRupees * 100;
+        int amountInPaise = (int) Math.round(amount * 100);
 
         RazorpayClient client = new RazorpayClient(keyId, keySecret);
 
